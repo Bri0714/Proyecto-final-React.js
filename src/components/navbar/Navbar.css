@@ -1,0 +1,45 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    /* cambia la opacidad a un color verde */
+    padding: 10px 30px;
+    /* ajusta el padding para que se vea bien centrado */
+}
+
+.logo {
+    width: 280px;
+    height: 160px;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 17px;
+    text-shadow: 1px  green;
+    /* cambia el text shadow a verde */
+    color: white;
+}
+
+.nav-link:hover {
+    text-shadow: 0.5px 0.5px rgb(12, 255, 12);
+    /* aumenta el tamaño del text shadow cuando se pasa el mouse por encima */
+}
+
+.car {
+    width: 30px;
+}
+
+.carrito-cantidad {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-size: 20px;
+}

@@ -3,11 +3,13 @@ import './Navbar.css';
 import { BsCart2 } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { useCartContext } from '../../context/CartContext';
+import { Dropdown } from 'react-bootstrap';
 
-const Navbar = ({ handleSearch }) => {
+const Navbar = ({ handleSearch, handleFilter }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const { cart } = useCartContext();
     const [cartLength, setCartLength] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
         let totalItems = 0;
@@ -25,6 +27,14 @@ const Navbar = ({ handleSearch }) => {
         event.preventDefault();
         handleSearch(searchTerm);
     };
+
+    const handleFilterClick = (event) => {
+        const category = event.target.getAttribute("category");
+        setSelectedCategory(category);
+        handleFilter(category);
+    };
+
+    
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-green">
@@ -56,6 +66,20 @@ const Navbar = ({ handleSearch }) => {
                                 Productos
                             </Link>
                         </li>
+                        <Dropdown>
+                            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                Categorías
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item category="guayos" onClick={handleFilterClick}>
+                                    Guayos
+                                </Dropdown.Item>
+                                <Dropdown.Item category="camisetas" onClick={handleFilterClick}>
+                                    Camisetas
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                         <li className="nav-item">
                             <Link to="/Carrito" className="nav-link">
                                 Carrito <BsCart2 className="car" />
@@ -75,7 +99,7 @@ const Navbar = ({ handleSearch }) => {
                             value={searchTerm}
                             onChange={handleInputChange}
                         />
-                        <button id="Boton" className="btn btn-outline-light" type="submit">
+                        <button className="btn btn-outline-light" type="submit">
                             Buscar
                         </button>
                     </form>
@@ -86,3 +110,7 @@ const Navbar = ({ handleSearch }) => {
 };
 
 export default Navbar;
+
+
+
+

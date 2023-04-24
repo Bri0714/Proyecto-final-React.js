@@ -6,22 +6,20 @@ import ProductItem from './components/ProductItem/ProductItem';
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import db from '../db/firebase.config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import Footer from './components/footer/Footer';
 import Spinner from './components/spinner/Spinner';
 import CartProvider from './context/CartContext';
 import CartView from './components/CartView/CartView';
 
-
-
 function App() {
   const [productos, setProductos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const productosCollectionref = collection(db, 'productos');
+  const productosCollectionRef = collection(db, 'productos');
 
   const getProductos = async () => {
-    const productosSnapshot = await getDocs(productosCollectionref);
+    const productosSnapshot = await getDocs(productosCollectionRef);
     setProductos(
       productosSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     );
@@ -36,6 +34,17 @@ function App() {
     setSearchTerm(searchTerm);
   };
 
+  const handleFilter = async (category) => {
+    setLoading(true);
+    const productosSnapshot = await getDocs(
+      query(productosCollectionRef, where('category', '==', category))
+    );
+    setProductos(
+      productosSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    );
+    setLoading(false);
+  };
+
   const filteredProductos = productos.filter((producto) =>
     producto.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -47,31 +56,30 @@ function App() {
   return (
     <body>
       <CartProvider>
-      <Navbar searchTerm={searchTerm} handleSearch={handleSearch} />
-      <div>
-        <div className='titulos'>
-          <h1 className='text-center title'>FABY SPORTS</h1>
+        <Navbar searchTerm={searchTerm} handleSearch={handleSearch} handleFilter={handleFilter} />
+        <div>
+          <div className='titulos'>
+            <h1 className='text-center title'>FABY SPORTS</h1>
+          </div>
+          <Routes>
+            <Route path='/' element={<Navigate to='Home' />} />
+            <Route path='/Home' element={<Home />} />
+            <Route
+              path='/productos'
+              element={<ProductList productos={filteredProductos} />}
+            />
+            <Route
+              path='/productos/:id'
+              element={<ProductItem productos={productos} />}
+            />
+            <Route path='/Carrito' element={<CartView />} />
+            <Route path='*' element={<h1>404 Not Found</h1>} />
+          </Routes>
         </div>
-        <Routes>
-          <Route path='/' element={<Navigate to='Home' />} />
-          <Route path='/Home' element={<Home />} />
-          <Route
-            path='/productos'
-            element={<ProductList productos={filteredProductos} />}
-          />
-          <Route
-            path='/productos/:id'
-            element={<ProductItem productos={productos} />}
-          />
-          <Route path='/Carrito' element={<CartView />} />
-          <Route path='*' element={<h1>404 Not Found</h1>} />
-
-        </Routes>
-      </div>
-      <Footer/>
+        <Footer />
       </CartProvider>
     </body>
   );
 }
 
-export default App
+export default App;

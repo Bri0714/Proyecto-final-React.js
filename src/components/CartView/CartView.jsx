@@ -3,6 +3,7 @@ import './CartView.css';
 import { useCartContext } from '../../context/CartContext';
 import { BsTrash } from 'react-icons/bs';
 import { toast } from 'react-toastify';
+import CheckOut from '../checkout/CheckOut';
 
 const CartView = () => {
     const { cart, removeProduct, clearCart } = useCartContext();
@@ -47,11 +48,10 @@ const CartView = () => {
             </div>
             <div className="d-flex justify-content-between align-items-center border-top pt-3">
                 <h4>Total: <strong>${totalPrice.toFixed(2)}</strong></h4>
-                <button className="btn btn-primary" onClick={handleClearCart}>Comprar</button>
             </div>
+            <CheckOut cart={cart} totalPrice={totalPrice} handleClearCart={handleClearCart} />
         </div>
     );
 };
 
 export default CartView;
-
